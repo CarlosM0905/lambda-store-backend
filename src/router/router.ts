@@ -1,6 +1,8 @@
+import { PaymentProxy } from './../classes/paymentProxy.class';
 import {Router, Request, Response} from 'express';
 import ProductsBD from '../sql/products_bd';
 import LambdaBD from '../sql/lambda_bd';
+import CardsBD from '../sql/cards_bd';
 
 const router = Router();
 
@@ -30,7 +32,6 @@ router.post('/login', (req: Request, res: Response) => {
                 })
         }
         else{
-            console.log(results);
             return res.status(200).json({
                 ok: true,
                 isUser: true,
@@ -61,7 +62,6 @@ router.get('/products', (req: Request, res: Response) => {
                 })
         }
         else{
-            console.log(results);
             return res.status(200).json({
                 ok: true,
                 products: results,
@@ -71,56 +71,71 @@ router.get('/products', (req: Request, res: Response) => {
     });
 })
 
-router.get('/heroes', (req: Request, res: Response)=>{
-    const query = `
-        SELECT * 
-        FROM heroes;
-    `
-    ProductsBD.ejecutarQuery(query, (err: any, heroes: Object[])=>{
-        if(err){
-            res.status(400).json({
-                ok:false,
-                error: err
-            })
-        }
-        else{
-            res.json({
-                ok: true,
-                heroes: heroes
-            })
-        }
-    })
-
-})
-
-router.get('/heroes/:id', (req: Request, res: Response)=>{
+router.post('/verify-card', (req: Request, res: Response) => {
+    const {cardNumber, amountCart, monthCard, yearCard, codeCard} = req.body;
     
-    const id = req.params.id;
-
-    const escapedId = ProductsBD.instance.conexion.escape(id);
-
     const query = `
         SELECT * 
-        FROM heroes
-        WHERE id = ${escapedId};
-    `
+        FROM tarjeta
+        WHERE numeroTarjeta = ${cardNumber};
+    `;
 
-    ProductsBD.ejecutarQuery(query, (err: any, heroe: Object[])=>{
+    CardsBD.ejecutarQuery(query, (err: any, results: Object[]) => {
         if(err){
-            res.status(400).json({
-                ok:false,
-                error: err
-            })
+            return res.status(500).json(
+                {
+                    ok: false,
+                    error: err,
+                })
+        }
+        else if(err === 'El registro no existe'){
+            return res.status(404).json(
+                {
+                    ok: false,
+                    message: 'No existen productos registrados',
+                })
         }
         else{
-            res.json({
-                ok: true,
-                heroe: heroe
-            })
+            const resultCard = JSON.parse(JSON.stringify(results[0]));
+            const pymntProxy = new PaymentProxy(resultCard.saldo, resultCard.expMonth, resultCard.expYear, resultCard.codigo);
+
+            if(pymntProxy.checkPayment(amountCart, monthCard, yearCard, codeCard)){
+                const query = `
+                UPDATE tarjeta 
+                SET saldo = ${resultCard.saldo - amountCart}
+                WHERE numeroTarjeta = ${cardNumber};
+            `;
+                
+                CardsBD.ejecutarQuery(query, (err: any, results: Object[]) => {
+                    if(err){
+                        return res.status(500).json(
+                            {
+                                ok: false,
+                                error: err,
+                            })
+                    }
+                    else if(err === 'El registro no existe'){
+                        return res.status(404).json(
+                            {
+                                ok: false,
+                                message: 'No existen productos registrados',
+                            })
+                    }
+                });
+
+              return res.status(200).json({
+                 ok: true,
+                 message: 'La compra se realizo correctamente',
+             });
+            }
+            else{
+                return res.status(406).json({
+                    ok: true,
+                    message: 'Su tarjeta no cumple con los requisitos para procesar el pago',
+                });
+            }            
         }
     })
-})
-
-
+});
 
 export default router;
