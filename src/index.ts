@@ -1,11 +1,13 @@
 import Server from "./server/server";
 import router from "./router/router";
-import MySQL from "./sql/mysql";
+import LambdaBD from "./sql/lambda_bd";
+import ProductsBD from "./sql/products_bd";
 
 const server = Server.init(3000);
 server.app.use(router)
 
-MySQL.instance;
+ProductsBD.instance;
+LambdaBD.instance;
 
 server.start(()=>{
     console.log('Servidor corriendo en el puerto 3000')

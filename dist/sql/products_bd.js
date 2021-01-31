@@ -7,7 +7,7 @@ let config = {
     password: 'password',
     database: 'bdcarritocompras'
 };
-class MySQL {
+class ProductsBD {
     constructor() {
         this.conectado = false;
         console.log('Clase inicializada');
@@ -42,4 +42,4 @@ class MySQL {
         });
     }
 }
-exports.default = MySQL;
+exports.default = ProductsBD;

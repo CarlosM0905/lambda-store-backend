@@ -4,11 +4,11 @@ let config = {
     host: 'localhost',
     user: 'root',
     password: 'password',
-    database: 'node_db'
+    database: 'bdcarritocompras'
 }
 
-export default class MySQL {
-    private static _instance: MySQL;
+export default class ProductsBD {
+    private static _instance: ProductsBD;
 
     conexion: mysql.Connection;
     conectado: boolean = false;

@@ -1,4 +1,5 @@
 import express = require('express');
+import cors = require('cors');
 import path = require('path');
 
 export default class Server {
@@ -8,6 +9,9 @@ export default class Server {
     constructor(port: number){
         this.port = port;
         this.app = express();
+        this.app.use(cors({origin: "*"}));
+        this.app.use(express.json());
+        this.app.use(express.urlencoded({extended: true}))
     }
 
     static init(port: number){

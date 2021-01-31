@@ -1,11 +1,15 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 const express = require("express");
+const cors = require("cors");
 const path = require("path");
 class Server {
     constructor(port) {
         this.port = port;
         this.app = express();
+        this.app.use(cors({ origin: "*" }));
+        this.app.use(express.json());
+        this.app.use(express.urlencoded({ extended: true }));
     }
     static init(port) {
         return new Server(port);

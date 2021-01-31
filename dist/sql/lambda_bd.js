@@ -5,12 +5,11 @@ let config = {
     host: 'localhost',
     user: 'root',
     password: 'password',
-    database: 'bdcarritocompras'
+    database: 'LambdaStore'
 };
-class MySQL {
+class LambdaBD {
     constructor() {
         this.conectado = false;
-        console.log('Clase inicializada');
         this.conexion = mysql.createConnection(config);
         this.conectarDB();
     }
@@ -38,8 +37,8 @@ class MySQL {
                 console.log(err.message);
             }
             this.conectado = true;
-            console.log('BD en linea');
+            console.log('BD de LambdaStore en linea');
         });
     }
 }
-exports.default = MySQL;
+exports.default = LambdaBD;

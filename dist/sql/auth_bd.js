@@ -5,9 +5,9 @@ let config = {
     host: 'localhost',
     user: 'root',
     password: 'password',
-    database: 'bdcarritocompras'
+    database: 'LambdaStore'
 };
-class MySQL {
+class AuthMySQL {
     constructor() {
         this.conectado = false;
         console.log('Clase inicializada');
@@ -38,8 +38,8 @@ class MySQL {
                 console.log(err.message);
             }
             this.conectado = true;
-            console.log('BD en linea');
+            console.log('BD de login en linea');
         });
     }
 }
-exports.default = MySQL;
+exports.default = AuthMySQL;
