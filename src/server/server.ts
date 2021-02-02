@@ -24,7 +24,7 @@ export default class Server {
     }
 
     start(callback: VoidFunction){
-        this.app.listen(this.port, callback)
+        this.app.listen( process.env.PORT || this.port, callback)
         this.publicFolder();
     }
 }

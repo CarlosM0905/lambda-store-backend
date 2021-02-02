@@ -1,10 +1,10 @@
 import mysql = require('mysql');
 
 let config = {
-    host: 'localhost',
-    user: 'root',
-    password: 'password',
-    database: 'LambdaStore'
+    host: 'bcjgii6lq4siafgifrjj-mysql.services.clever-cloud.com',
+    user: 'usob5mr00oe8uc4u',
+    password: 'IC5Tvw1ir8KsjYXjyu8M',
+    database: 'bcjgii6lq4siafgifrjj'
 }
 
 export default class LambdaBD {

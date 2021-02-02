@@ -1,10 +1,10 @@
 import mysql = require('mysql');
 
 let config = {
-    host: 'localhost',
-    user: 'root',
-    password: 'password',
-    database: 'bancotarjeta'
+    host: 'bysquumlkb9nclakac8f-mysql.services.clever-cloud.com',
+    user: 'uzl5rr47pgapanko',
+    password: 'njyYXrGwgb8OKT1j75y5',
+    database: 'bysquumlkb9nclakac8f'
 }
 
 export default class CardsBD {
